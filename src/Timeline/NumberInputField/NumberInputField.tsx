@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Props = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -16,6 +16,10 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
   const { step, min, max } = props;
   const [inputValue, setInputValue] = useState(value);
 
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
   const validateValue = useCallback(
     (value: number) => {
       const clampedValue = Math.min(Math.max(value, min), max);
@@ -27,12 +31,6 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
     [min, max]
   );
 
-  const setValidInputValue = useCallback(
-    (value: number) => {
-      setInputValue(validateValue(value));
-    },
-    [validateValue]
-  );
   const submitChange = useCallback(
     (newValue: number) => {
       onChange(validateValue(newValue));
@@ -71,7 +69,7 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
 
       setInputValue(newValue);
     },
-    [submitChange, value, inputValue, selectInput, setValidInputValue]
+    [submitChange, value, inputValue, selectInput]
   );
 
   const handleInputKeyDown = useCallback(
@@ -80,13 +78,11 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
         case "Enter":
           e.preventDefault();
           submitChange(inputValue);
-          setValidInputValue(inputValue);
           clearFocus();
           break;
         case "Escape":
           e.preventDefault();
           submitChange(value);
-          setValidInputValue(value);
           clearFocus();
           break;
         case "ArrowUp":

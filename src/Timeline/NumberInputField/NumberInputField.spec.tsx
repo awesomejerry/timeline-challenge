@@ -221,7 +221,7 @@ describe("NumberInputField", () => {
     expect(input.value).toBe("100");
     fireEvent.keyDown(input, { key: "Escape", code: "Escape" });
     expect(input).not.toHaveFocus();
-    expect(input.value).toBe(initialValue.toString());
+    expect(mockOnChange).toHaveBeenCalledWith(initialValue);
   });
 
   it("Leading zeros are automatically removed", async () => {
