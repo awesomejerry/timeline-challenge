@@ -1,4 +1,5 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
+import { NumberInputField } from "./NumberInputField/NumberInputField";
 
 type PlayControlsProps = {
   time: number;
@@ -9,10 +10,10 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
   // TODO: implement time <= maxTime
 
   const onTimeChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTime(Number(e.target.value));
+    (value: number) => {
+      setTime(value);
     },
-    [setTime],
+    [setTime]
   );
 
   return (
@@ -23,9 +24,8 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     >
       <fieldset className="flex gap-1">
         Current
-        <input
+        <NumberInputField
           className="bg-gray-700 px-1 rounded"
-          type="number"
           data-testid="current-time-input"
           min={0}
           max={2000}
