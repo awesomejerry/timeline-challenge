@@ -1,4 +1,5 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { tenMultipliers } from "../../utils";
 
 type Props = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -16,14 +17,19 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
   const { step, min, max } = props;
   const [inputValue, setInputValue] = useState(value);
 
+  useEffect(() => {
+    if (value !== inputValue) {
+      setInputValue(value);
+    }
+  }, [value]);
+
   const validateValue = useCallback(
     (value: number) => {
       const clampedValue = Math.min(Math.max(value, min), max);
       const validIntegerValue = Number.isInteger(clampedValue)
         ? clampedValue
         : Math.round(clampedValue);
-      const tenMultiples = Math.round(validIntegerValue / 10) * 10;
-      return tenMultiples;
+      return tenMultipliers(validIntegerValue);
     },
     [min, max]
   );

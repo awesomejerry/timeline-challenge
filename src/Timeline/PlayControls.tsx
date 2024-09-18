@@ -1,9 +1,11 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { NumberInputField } from "./NumberInputField/NumberInputField";
 
 type PlayControlsProps = {
   time: number;
   setTime: (time: number) => void;
+  duration: number;
+  setDuration: (time: number) => void;
 };
 
 export const MIN_DURATION = 100;
@@ -11,9 +13,12 @@ export const MAX_DURATION = 6000;
 export const DEFAULT_DURATION = 2000;
 const STEP = 10;
 
-export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
-  const [duration, setDuration] = useState(DEFAULT_DURATION);
-
+export const PlayControls = ({
+  time,
+  setTime,
+  duration,
+  setDuration,
+}: PlayControlsProps) => {
   const handleDurationChange = useCallback(
     (value: number) => {
       setDuration(value);

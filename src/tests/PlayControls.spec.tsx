@@ -10,8 +10,16 @@ import userEvent from "@testing-library/user-event";
 describe("PlayControls", () => {
   it("Current Time is always between 0ms and the Duration", () => {
     const mockSetTime = jest.fn();
+    const mockSetDuration = jest.fn();
 
-    render(<PlayControls time={0} setTime={mockSetTime} />);
+    render(
+      <PlayControls
+        time={0}
+        setTime={mockSetTime}
+        duration={2000}
+        setDuration={mockSetDuration}
+      />
+    );
 
     const input = screen.getByTestId("current-time-input") as HTMLInputElement;
 
@@ -26,8 +34,16 @@ describe("PlayControls", () => {
 
   it("Current Time adjusts if it exceeds the newly set Duration", () => {
     const mockSetTime = jest.fn();
+    const mockSetDuration = jest.fn();
 
-    render(<PlayControls time={1000} setTime={mockSetTime} />);
+    render(
+      <PlayControls
+        time={1000}
+        setTime={mockSetTime}
+        duration={2000}
+        setDuration={mockSetDuration}
+      />
+    );
 
     const input = screen.getByTestId("duration-input") as HTMLInputElement;
 
@@ -38,8 +54,16 @@ describe("PlayControls", () => {
 
   it("Duration is always between 100ms and 6000ms", () => {
     const mockSetTime = jest.fn();
+    const mockSetDuration = jest.fn();
 
-    render(<PlayControls time={1000} setTime={mockSetTime} />);
+    render(
+      <PlayControls
+        time={1000}
+        setTime={mockSetTime}
+        duration={2000}
+        setDuration={mockSetDuration}
+      />
+    );
 
     const input = screen.getByTestId("duration-input") as HTMLInputElement;
 
@@ -54,8 +78,16 @@ describe("PlayControls", () => {
 
   it("Current Time and Duration are always multiples of 10ms", () => {
     const mockSetTime = jest.fn();
+    const mockSetDuration = jest.fn();
 
-    render(<PlayControls time={1000} setTime={mockSetTime} />);
+    render(
+      <PlayControls
+        time={1000}
+        setTime={mockSetTime}
+        duration={2000}
+        setDuration={mockSetDuration}
+      />
+    );
 
     const input = screen.getByTestId("current-time-input") as HTMLInputElement;
 
@@ -70,8 +102,16 @@ describe("PlayControls", () => {
 
   it("Current Time and Duration are always positive integers", () => {
     const mockSetTime = jest.fn();
+    const mockSetDuration = jest.fn();
 
-    render(<PlayControls time={1000} setTime={mockSetTime} />);
+    render(
+      <PlayControls
+        time={1000}
+        setTime={mockSetTime}
+        duration={2000}
+        setDuration={mockSetDuration}
+      />
+    );
 
     let input = screen.getByTestId("current-time-input") as HTMLInputElement;
 
@@ -88,7 +128,16 @@ describe("PlayControls", () => {
 
   it("Playhead position updates only after specific actions on Current Time input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)", async () => {
     const mockSetTime = jest.fn();
-    render(<PlayControls time={1000} setTime={mockSetTime} />);
+    const mockSetDuration = jest.fn();
+
+    render(
+      <PlayControls
+        time={1000}
+        setTime={mockSetTime}
+        duration={2000}
+        setDuration={mockSetDuration}
+      />
+    );
 
     const input = screen.getByTestId("current-time-input") as HTMLInputElement;
 
