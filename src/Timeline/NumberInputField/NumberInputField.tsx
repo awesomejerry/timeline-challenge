@@ -10,8 +10,19 @@ type Props = Omit<
 
 const NumberInputField = ({ value, onChange, ...props }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { step } = props;
+  const { step, min } = props;
   const [inputValue, setInputValue] = useState(value);
+
+  const submitChange = useCallback(
+    (newValue: number) => {
+      const minValidValue = newValue < 0 ? Number(min) : newValue;
+      const validIntegerValue = Number.isInteger(minValidValue)
+        ? minValidValue
+        : Math.round(minValidValue);
+      onChange(validIntegerValue);
+    },
+    [onChange, min]
+  );
 
   const selectInput = useCallback(() => {
     const input = inputRef.current;
@@ -29,38 +40,46 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = Number(e.target.value);
+      if (e.target.value === "") {
+        submitChange(value);
+        return;
+      }
+      const newValue = Number(e.target.value);
       // TODO: a temporary solution to detect native step buttons pressed
       const rounded =
-        value !== step ? Math.round(inputValue / 10) * 10 : inputValue;
+        newValue !== step ? Math.round(inputValue / 10) * 10 : inputValue;
       if (
-        value === rounded + Number(step) ||
-        value === rounded - Number(step)
+        newValue === rounded + Number(step) ||
+        newValue === rounded - Number(step)
       ) {
-        onChange(value);
+        submitChange(newValue);
         selectInput();
       }
-      setInputValue(value);
+      setInputValue(newValue);
     },
-    [onChange, inputValue, selectInput]
+    [submitChange, value, inputValue, selectInput]
   );
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       switch (e.key) {
         case "Enter":
-          onChange(inputValue);
+          submitChange(inputValue);
+          clearFocus();
+          break;
+        case "Escape":
+          setInputValue(value);
           clearFocus();
           break;
         case "ArrowUp":
         case "ArrowDown":
           const direction = e.key === "ArrowUp" ? 1 : -1;
           const newValue = inputValue + direction * Number(step);
-          onChange(newValue);
+          submitChange(newValue);
           break;
       }
     },
-    [onChange, inputValue, step, clearFocus]
+    [submitChange, inputValue, step, clearFocus]
   );
 
   const handleInputFocus = useCallback(() => {
@@ -68,8 +87,8 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
   }, [selectInput]);
 
   const handleInputBlur = useCallback(() => {
-    onChange(inputValue);
-  }, [onChange, inputValue]);
+    submitChange(inputValue);
+  }, [submitChange, inputValue]);
 
   return (
     <input

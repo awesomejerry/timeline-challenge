@@ -187,4 +187,105 @@ describe("NumberInputField", () => {
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
     expect(input).not.toHaveFocus();
   });
+
+  it(" Pressing Escape reverts to the original value and removes focus", async () => {
+    const mockOnChange = jest.fn();
+    const initialValue = 150;
+
+    render(
+      <NumberInputField
+        data-testid="number-input-field"
+        value={initialValue}
+        onChange={mockOnChange}
+      />
+    );
+
+    const input = screen.getByTestId("number-input-field") as HTMLInputElement;
+    input.focus();
+    fireEvent.change(input, { target: { value: "100" } });
+    expect(input.value).toBe("100");
+    fireEvent.keyDown(input, { key: "Escape", code: "Escape" });
+    expect(input).not.toHaveFocus();
+    expect(input.value).toBe(initialValue.toString());
+  });
+
+  it("Leading zeros are automatically removed", async () => {
+    const mockOnChange = jest.fn();
+    const initialValue = 150;
+
+    render(
+      <NumberInputField
+        data-testid="number-input-field"
+        value={initialValue}
+        onChange={mockOnChange}
+      />
+    );
+
+    const input = screen.getByTestId("number-input-field") as HTMLInputElement;
+    input.focus();
+    fireEvent.change(input, { target: { value: "0100" } });
+    expect(input.value).toBe("100");
+  });
+
+  it("Negative values are automatically adjusted to the minimum allowed value", async () => {
+    const mockOnChange = jest.fn();
+    const initialValue = 100;
+    const min = 10;
+
+    render(
+      <NumberInputField
+        data-testid="number-input-field"
+        value={initialValue}
+        onChange={mockOnChange}
+        min={min}
+      />
+    );
+
+    const input = screen.getByTestId("number-input-field") as HTMLInputElement;
+    input.focus();
+    fireEvent.change(input, { target: { value: "-100" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(mockOnChange).toHaveBeenCalledWith(min);
+  });
+
+  it("Decimal values are automatically rounded to the nearest integer", async () => {
+    const mockOnChange = jest.fn();
+    const initialValue = 100;
+
+    render(
+      <NumberInputField
+        data-testid="number-input-field"
+        value={initialValue}
+        onChange={mockOnChange}
+      />
+    );
+
+    const input = screen.getByTestId("number-input-field") as HTMLInputElement;
+    input.focus();
+    fireEvent.change(input, { target: { value: "100.5" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(mockOnChange).toHaveBeenCalledWith(101);
+    fireEvent.change(input, { target: { value: "100.4" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(mockOnChange).toHaveBeenCalledWith(100);
+  });
+
+  it("Invalid inputs (non-numeric) revert to the previous valid value", async () => {
+    const mockOnChange = jest.fn();
+    const initialValue = 100;
+
+    render(
+      <NumberInputField
+        data-testid="number-input-field"
+        value={initialValue}
+        onChange={mockOnChange}
+      />
+    );
+
+    const input = screen.getByTestId("number-input-field") as HTMLInputElement;
+    input.focus();
+    fireEvent.change(input, { target: { value: "123abc" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(mockOnChange).toHaveBeenCalledWith(100);
+  });
 });
