@@ -6,18 +6,23 @@ type PlayControlsProps = {
   setTime: (time: number) => void;
 };
 
-const MIN_DURATION = 100;
-const MAX_DURATION = 6000;
+export const MIN_DURATION = 100;
+export const MAX_DURATION = 6000;
+export const DEFAULT_DURATION = 2000;
 const STEP = 10;
 
 export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
-  const [duration, setDuration] = useState(2000);
+  const [duration, setDuration] = useState(DEFAULT_DURATION);
 
   const handleDurationChange = useCallback(
     (value: number) => {
       setDuration(value);
+
+      if (value < time) {
+        setTime(value);
+      }
     },
-    [setDuration]
+    [setDuration, setTime, time]
   );
 
   // TODO: implement time <= maxTime
@@ -41,7 +46,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           className="bg-gray-700 px-1 rounded"
           data-testid="current-time-input"
           min={0}
-          max={MAX_DURATION}
+          max={duration}
           step={STEP}
           value={time}
           onChange={onTimeChange}
