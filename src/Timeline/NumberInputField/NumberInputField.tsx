@@ -2,26 +2,42 @@ import { useCallback, useRef, useState } from "react";
 
 type Props = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
-  "value" | "onChange"
+  "value" | "onChange" | "min" | "max" | "step"
 > & {
   value: number;
   onChange: (value: number) => void;
+  min: number;
+  max: number;
+  step: number;
 };
 
 const NumberInputField = ({ value, onChange, ...props }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { step, min } = props;
+  const { step, min, max } = props;
   const [inputValue, setInputValue] = useState(value);
 
+  const validateValue = useCallback(
+    (value: number) => {
+      const clampedValue = Math.min(Math.max(value, min), max);
+      const validIntegerValue = Number.isInteger(clampedValue)
+        ? clampedValue
+        : Math.round(clampedValue);
+      return validIntegerValue;
+    },
+    [min, max]
+  );
+
+  const setValidInputValue = useCallback(
+    (value: number) => {
+      setInputValue(validateValue(value));
+    },
+    [validateValue]
+  );
   const submitChange = useCallback(
     (newValue: number) => {
-      const minValidValue = newValue < 0 ? Number(min) : newValue;
-      const validIntegerValue = Number.isInteger(minValidValue)
-        ? minValidValue
-        : Math.round(minValidValue);
-      onChange(validIntegerValue);
+      onChange(validateValue(newValue));
     },
-    [onChange, min]
+    [onChange, validateValue]
   );
 
   const selectInput = useCallback(() => {
@@ -48,33 +64,36 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
       // TODO: a temporary solution to detect native step buttons pressed
       const rounded =
         newValue !== step ? Math.round(inputValue / 10) * 10 : inputValue;
-      if (
-        newValue === rounded + Number(step) ||
-        newValue === rounded - Number(step)
-      ) {
+      if (newValue === rounded + step || newValue === rounded - step) {
         submitChange(newValue);
         selectInput();
       }
+
       setInputValue(newValue);
     },
-    [submitChange, value, inputValue, selectInput]
+    [submitChange, value, inputValue, selectInput, setValidInputValue]
   );
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       switch (e.key) {
         case "Enter":
+          e.preventDefault();
           submitChange(inputValue);
+          setValidInputValue(inputValue);
           clearFocus();
           break;
         case "Escape":
-          setInputValue(value);
+          e.preventDefault();
+          submitChange(value);
+          setValidInputValue(value);
           clearFocus();
           break;
         case "ArrowUp":
         case "ArrowDown":
+          e.preventDefault();
           const direction = e.key === "ArrowUp" ? 1 : -1;
-          const newValue = inputValue + direction * Number(step);
+          const newValue = inputValue + direction * step;
           submitChange(newValue);
           break;
       }
@@ -92,6 +111,7 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
 
   return (
     <input
+      {...props}
       ref={inputRef}
       type="number"
       value={inputValue.toString()}
@@ -99,7 +119,6 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
       onKeyDown={handleInputKeyDown}
       onFocus={handleInputFocus}
       onBlur={handleInputBlur}
-      {...props}
     />
   );
 };

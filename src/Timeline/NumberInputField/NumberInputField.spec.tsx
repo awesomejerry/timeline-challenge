@@ -12,6 +12,9 @@ describe("NumberInputField", () => {
         data-testid="number-input-field"
         value={initialValue}
         onChange={mockOnChange}
+        min={0}
+        max={2000}
+        step={10}
       />
     );
 
@@ -36,6 +39,9 @@ describe("NumberInputField", () => {
         data-testid="number-input-field"
         value={initialValue}
         onChange={mockOnChange}
+        min={0}
+        max={2000}
+        step={10}
       />
     );
 
@@ -112,6 +118,9 @@ describe("NumberInputField", () => {
         data-testid="number-input-field"
         value={initialValue}
         onChange={mockOnChange}
+        min={0}
+        max={2000}
+        step={10}
       />
     );
 
@@ -179,6 +188,9 @@ describe("NumberInputField", () => {
         data-testid="number-input-field"
         value={initialValue}
         onChange={mockOnChange}
+        min={0}
+        max={2000}
+        step={10}
       />
     );
 
@@ -197,6 +209,9 @@ describe("NumberInputField", () => {
         data-testid="number-input-field"
         value={initialValue}
         onChange={mockOnChange}
+        min={0}
+        max={2000}
+        step={10}
       />
     );
 
@@ -218,6 +233,9 @@ describe("NumberInputField", () => {
         data-testid="number-input-field"
         value={initialValue}
         onChange={mockOnChange}
+        min={0}
+        max={2000}
+        step={10}
       />
     );
 
@@ -238,6 +256,8 @@ describe("NumberInputField", () => {
         value={initialValue}
         onChange={mockOnChange}
         min={min}
+        max={2000}
+        step={10}
       />
     );
 
@@ -257,6 +277,9 @@ describe("NumberInputField", () => {
         data-testid="number-input-field"
         value={initialValue}
         onChange={mockOnChange}
+        min={0}
+        max={2000}
+        step={10}
       />
     );
 
@@ -279,6 +302,9 @@ describe("NumberInputField", () => {
         data-testid="number-input-field"
         value={initialValue}
         onChange={mockOnChange}
+        min={0}
+        max={2000}
+        step={10}
       />
     );
 
