@@ -7,6 +7,7 @@ export const TrackList = () => {
       border-r border-solid border-r-gray-700 
       overflow-auto"
       data-testid="track-list"
+      data-sync-scroll="vertical"
     >
       <div className="p-2">
         <div>Track A</div>

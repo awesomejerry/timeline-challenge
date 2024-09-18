@@ -99,7 +99,7 @@ describe("Ruler", () => {
 
     const durationInput = screen.getByTestId(
       "duration-input"
-    ) as HTMLDivElement;
+    ) as HTMLInputElement;
     durationInput.focus();
     fireEvent.change(durationInput, { target: { value: "3000" } });
     const rulerBar = screen.getByTestId("ruler-bar") as HTMLDivElement;

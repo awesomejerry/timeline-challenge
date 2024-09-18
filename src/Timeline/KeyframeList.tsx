@@ -11,7 +11,7 @@ export const KeyframeList = ({ duration }: KeyframeListProps) => {
     <div
       className="px-4 min-w-0 overflow-auto"
       data-testid="keyframe-list"
-      data-sync-scroll
+      data-sync-scroll="horizontal|vertical"
     >
       <Segment duration={duration} />
       <Segment duration={duration} />

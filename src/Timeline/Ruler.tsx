@@ -52,7 +52,7 @@ export const Ruler = ({ setTime, duration }: RulerProps) => {
       border-b border-solid border-gray-700 
       overflow-x-auto overflow-y-hidden"
       data-testid="ruler"
-      data-sync-scroll
+      data-sync-scroll="horizontal"
     >
       <div
         className="h-6 rounded-md bg-white/25 select-none"
