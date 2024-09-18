@@ -104,9 +104,8 @@ describe("NumberInputField", () => {
     await userEvent.keyboard("{arrowup}");
     expect(mockOnChange).toHaveBeenCalledWith(160);
 
-    // NOTE: it's a mock function, so the value prop (initialValue) is not changed
     await userEvent.keyboard("{arrowdown}");
-    expect(mockOnChange).toHaveBeenLastCalledWith(140);
+    expect(mockOnChange).toHaveBeenLastCalledWith(150);
   });
 
   it("Entire text is selected when the input field gains focus", async () => {
@@ -285,9 +284,9 @@ describe("NumberInputField", () => {
 
     const input = screen.getByTestId("number-input-field") as HTMLInputElement;
     input.focus();
-    fireEvent.change(input, { target: { value: "100.5" } });
+    fireEvent.change(input, { target: { value: "104.5" } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
-    expect(mockOnChange).toHaveBeenCalledWith(101);
+    expect(mockOnChange).toHaveBeenCalledWith(110);
     fireEvent.change(input, { target: { value: "100.4" } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
     expect(mockOnChange).toHaveBeenCalledWith(100);

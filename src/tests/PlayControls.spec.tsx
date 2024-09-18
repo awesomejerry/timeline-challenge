@@ -5,6 +5,7 @@ import {
   MIN_DURATION,
   PlayControls,
 } from "../Timeline/PlayControls";
+import userEvent from "@testing-library/user-event";
 
 describe("PlayControls", () => {
   it("Current Time is always between 0ms and the Duration", () => {
@@ -49,5 +50,61 @@ describe("PlayControls", () => {
     fireEvent.change(input, { target: { value: `${MAX_DURATION + 1}` } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
     expect(input.value).toBe(`${MAX_DURATION}`);
+  });
+
+  it("Current Time and Duration are always multiples of 10ms", () => {
+    const mockSetTime = jest.fn();
+
+    render(<PlayControls time={1000} setTime={mockSetTime} />);
+
+    const input = screen.getByTestId("current-time-input") as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: "103" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(mockSetTime).toHaveBeenCalledWith(100);
+
+    fireEvent.change(input, { target: { value: "107" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(mockSetTime).toHaveBeenCalledWith(110);
+  });
+
+  it("Current Time and Duration are always positive integers", () => {
+    const mockSetTime = jest.fn();
+
+    render(<PlayControls time={1000} setTime={mockSetTime} />);
+
+    let input = screen.getByTestId("current-time-input") as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: "-100" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(mockSetTime).toHaveBeenCalledWith(0);
+
+    input = screen.getByTestId("duration-input") as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: "-100" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(input.value).toBe(`${MIN_DURATION}`);
+  });
+
+  it("Playhead position updates only after specific actions on Current Time input (losing focus, pressing Enter, using arrow keys, or clicking up/down buttons)", async () => {
+    const mockSetTime = jest.fn();
+    render(<PlayControls time={1000} setTime={mockSetTime} />);
+
+    const input = screen.getByTestId("current-time-input") as HTMLInputElement;
+
+    input.focus();
+    fireEvent.change(input, { target: { value: "500" } });
+    expect(mockSetTime).not.toHaveBeenCalled();
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
+    expect(mockSetTime).toHaveBeenLastCalledWith(500);
+
+    input.focus();
+    await userEvent.keyboard("{arrowup}");
+    expect(mockSetTime).toHaveBeenLastCalledWith(510);
+
+    input.focus();
+    fireEvent.change(input, { target: { value: "520" } });
+    input.blur();
+    expect(mockSetTime).toHaveBeenLastCalledWith(520);
   });
 });
