@@ -1,19 +1,28 @@
 import { Segment } from "./Segment";
-export const KeyframeList = () => {
+
+type KeyframeListProps = {
+  duration: number;
+};
+
+export const KeyframeList = ({ duration }: KeyframeListProps) => {
   // TODO: implement scroll sync with `Ruler` and `TrackList`
 
   return (
-    <div className="px-4 min-w-0 overflow-auto" data-testid="keyframe-list">
-      <Segment />
-      <Segment />
-      <Segment />
-      <Segment />
-      <Segment />
-      <Segment />
-      <Segment />
-      <Segment />
-      <Segment />
-      <Segment />
+    <div
+      className="px-4 min-w-0 overflow-auto"
+      data-testid="keyframe-list"
+      data-sync-scroll
+    >
+      <Segment duration={duration} />
+      <Segment duration={duration} />
+      <Segment duration={duration} />
+      <Segment duration={duration} />
+      <Segment duration={duration} />
+      <Segment duration={duration} />
+      <Segment duration={duration} />
+      <Segment duration={duration} />
+      <Segment duration={duration} />
+      <Segment duration={duration} />
     </div>
   );
 };

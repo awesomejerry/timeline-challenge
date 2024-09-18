@@ -4,6 +4,7 @@ import { Ruler } from "./Ruler";
 import { TrackList } from "./TrackList";
 import { KeyframeList } from "./KeyframeList";
 import { DEFAULT_DURATION, PlayControls } from "./PlayControls";
+import { SyncScroll } from "./SyncScroll";
 
 export const Timeline = () => {
   // FIXME: performance concerned
@@ -29,8 +30,9 @@ export const Timeline = () => {
         setDuration={setDuration}
       />
       <TrackList />
-      <KeyframeList />
+      <KeyframeList duration={duration} />
       <Playhead time={time} />
+      <SyncScroll />
     </div>
   );
 };

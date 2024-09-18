@@ -40,7 +40,6 @@ export const Ruler = ({ setTime, duration }: RulerProps) => {
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (draggingRef.current) {
-      // get current move position
       const rect = (e.target as HTMLElement).getBoundingClientRect();
       const x = e.clientX - rect.left;
       setTime(tenMultipliers(x));
@@ -53,6 +52,7 @@ export const Ruler = ({ setTime, duration }: RulerProps) => {
       border-b border-solid border-gray-700 
       overflow-x-auto overflow-y-hidden"
       data-testid="ruler"
+      data-sync-scroll
     >
       <div
         className="h-6 rounded-md bg-white/25 select-none"
