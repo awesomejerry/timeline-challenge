@@ -3,6 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { NumberInputField } from "./NumberInputField";
 
 describe("NumberInputField", () => {
+  const user = userEvent.setup({ writeToClipboard: true });
+
   it("The displayed value updates immediately while typing, but onChange is not triggered until input is confirmed", () => {
     const mockOnChange = jest.fn();
     const initialValue = 0;
@@ -113,19 +115,27 @@ describe("NumberInputField", () => {
     const initialValue = 150;
 
     render(
-      <NumberInputField
-        data-testid="number-input-field"
-        value={initialValue}
-        onChange={mockOnChange}
-        min={0}
-        max={2000}
-        step={10}
-      />
+      <>
+        <NumberInputField
+          data-testid="number-input-field"
+          value={initialValue}
+          onChange={mockOnChange}
+          min={0}
+          max={2000}
+          step={10}
+        />
+        <input data-testid="target-input" />
+      </>
     );
 
     const input = screen.getByTestId("number-input-field") as HTMLInputElement;
+    const targetInput = screen.getByTestId("target-input") as HTMLInputElement;
+    expect(targetInput.value).toBe("");
     input.focus();
-    // TODO: verify the current input selection matches initialValue
+    await user.copy();
+    targetInput.focus();
+    await user.paste();
+    expect(targetInput.value).toBe("150");
   });
 
   it("Entire text is selected after using the native step buttons", async () => {
@@ -133,23 +143,37 @@ describe("NumberInputField", () => {
     const initialValue = 150;
 
     render(
-      <NumberInputField
-        data-testid="number-input-field"
-        value={initialValue}
-        onChange={mockOnChange}
-        min={0}
-        max={2000}
-        step={10}
-      />
+      <>
+        <NumberInputField
+          data-testid="number-input-field"
+          value={initialValue}
+          onChange={mockOnChange}
+          min={0}
+          max={2000}
+          step={10}
+        />
+        <input data-testid="target-input" />
+      </>
     );
 
     const input = screen.getByTestId("number-input-field") as HTMLInputElement;
+    const targetInput = screen.getByTestId("target-input") as HTMLInputElement;
 
+    input.focus();
     fireEvent.change(input, { target: { value: "160" } });
-    // TODO: verify the current input selection matches initialValue
+    expect(targetInput.value).toBe("");
+    await user.copy();
+    targetInput.focus();
+    await user.paste();
+    expect(targetInput.value).toBe("160");
 
+    input.focus();
     fireEvent.change(input, { target: { value: "150" } });
-    // TODO: verify the current input selection matches initialValue
+    await user.copy();
+    targetInput.focus();
+    await user.tripleClick(targetInput);
+    await user.paste();
+    expect(targetInput.value).toBe("150");
   });
 
   it("Entire text is selected after using the up arrow or down arrow keys", async () => {
@@ -157,25 +181,37 @@ describe("NumberInputField", () => {
     const initialValue = 150;
 
     render(
-      <NumberInputField
-        data-testid="number-input-field"
-        value={initialValue}
-        onChange={mockOnChange}
-        min={0}
-        max={2000}
-        step={10}
-      />
+      <>
+        <NumberInputField
+          data-testid="number-input-field"
+          value={initialValue}
+          onChange={mockOnChange}
+          min={0}
+          max={2000}
+          step={10}
+        />
+        <input data-testid="target-input" />
+      </>
     );
 
     const input = screen.getByTestId("number-input-field") as HTMLInputElement;
+    const targetInput = screen.getByTestId("target-input") as HTMLInputElement;
+    expect(targetInput.value).toBe("");
+
     input.focus();
-    expect(document.activeElement).toBe(input);
-
     await userEvent.keyboard("{arrowup}");
-    // TODO: verify the current input selection matches initialValue
+    await user.copy();
+    targetInput.focus();
+    await user.paste();
+    expect(targetInput.value).toBe("160");
 
+    input.focus();
     await userEvent.keyboard("{arrowdown}");
-    // TODO: verify the current input selection matches initialValue
+    await user.copy();
+    targetInput.focus();
+    await user.tripleClick(targetInput);
+    await user.paste();
+    expect(targetInput.value).toBe("150");
   });
 
   it("Pressing Enter confirms the new value and removes focus", async () => {
