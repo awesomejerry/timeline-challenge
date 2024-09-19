@@ -4,6 +4,14 @@ type SyncScrollProps = {
   setScrollLeft?: (value: number) => void;
 };
 
+const checkSyncDirection = ({
+  target,
+  direction,
+}: {
+  target: Element;
+  direction: "horizontal" | "vertical";
+}) => target.getAttribute("data-sync-scroll")?.indexOf(direction) !== -1;
+
 const SyncScroll = ({ setScrollLeft }: SyncScrollProps) => {
   const elementRefs = useRef<Element[]>([]);
 
@@ -12,33 +20,42 @@ const SyncScroll = ({ setScrollLeft }: SyncScrollProps) => {
       return;
     }
     const scrollElement = e.target as Element;
+    const syncScrollLeft = checkSyncDirection({
+      target: scrollElement,
+      direction: "horizontal",
+    });
+    const syncScrollTop = checkSyncDirection({
+      target: scrollElement,
+      direction: "vertical",
+    });
+
     const scrollLeft = scrollElement.scrollLeft;
     const scrollTop = scrollElement.scrollTop;
+    if (syncScrollLeft) {
+      setScrollLeft?.(scrollLeft);
+    }
     elementRefs.current.forEach((element) => {
       if (element === scrollElement) {
         return;
       }
+
       if (
-        scrollElement
-          .getAttribute("data-sync-scroll")
-          ?.indexOf("horizontal") !== -1 &&
-        element.getAttribute("data-sync-scroll")?.indexOf("horizontal") !== -1
+        syncScrollLeft &&
+        checkSyncDirection({ target: element, direction: "horizontal" })
       ) {
         if (element.scrollLeft !== scrollLeft) {
           element.scrollLeft = scrollLeft;
         }
       }
       if (
-        scrollElement.getAttribute("data-sync-scroll")?.indexOf("vertical") !==
-          -1 &&
-        element.getAttribute("data-sync-scroll")?.indexOf("vertical") !== -1
+        syncScrollTop &&
+        checkSyncDirection({ target: element, direction: "vertical" })
       ) {
         if (element.scrollTop !== scrollTop) {
           element.scrollTop = scrollTop;
         }
       }
     });
-    setScrollLeft?.(scrollLeft);
   }, []);
 
   useEffect(() => {
