@@ -17,6 +17,18 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
   const { step, min, max } = props;
   const [inputValue, setInputValue] = useState(value);
 
+  const reportInvalid = useCallback((invalid: boolean) => {
+    if (invalid) {
+      inputRef.current?.classList.add("text-red-500");
+    } else {
+      inputRef.current?.classList.remove("text-red-500");
+    }
+  }, []);
+
+  useEffect(() => {
+    reportInvalid(inputValue !== validateValue(inputValue));
+  }, [inputValue, reportInvalid]);
+
   useEffect(() => {
     if (value !== inputValue) {
       setInputValue(value);
