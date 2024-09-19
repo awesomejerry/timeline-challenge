@@ -22,19 +22,21 @@ describe("Timeline", () => {
     expect(currentTimeInput.value).toBe("0");
     expect(durationInput.value).toBe("2000");
 
-    currentTimeInput.focus();
-    await user.type(currentTimeInput, "100");
+    await user.click(currentTimeInput);
+    await user.keyboard("100");
     await user.keyboard("{enter}");
     expect(currentTimeInput).not.toHaveFocus();
     expect(currentTimeInput.value).toBe("100");
     expect(playhead.style.transform).toBe("translateX(calc(100px - 50%))");
 
-    currentTimeInput.focus();
-    await user.type(currentTimeInput, "200");
+    await user.click(currentTimeInput);
+    await user.keyboard("200");
     await user.click(document.body);
     expect(currentTimeInput.value).toBe("200");
 
-    await user.type(durationInput, "1000");
+    await user.click(durationInput);
+    await user.keyboard("1000");
+    await user.keyboard("{enter}");
     expect(getComputedStyle(rulerBar).width).toBe("1000px");
 
     await user.type(durationInput, "50");
