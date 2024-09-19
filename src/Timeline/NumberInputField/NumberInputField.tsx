@@ -15,6 +15,7 @@ type Props = Omit<
 
 const NumberInputField = React.memo(({ value, onChange, ...props }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const keyDown = useRef<String | null>(null);
   const { step, min, max } = props;
   const [inputValue, setInputValue] = useState(value);
 
@@ -113,9 +114,15 @@ const NumberInputField = React.memo(({ value, onChange, ...props }: Props) => {
           submitChange(newValue);
           break;
       }
+      keyDown.current = e.key;
     },
     [submitChange, inputValue, step, clearFocus]
   );
+  const handleInputKeyUp = useCallback(() => {
+    if (keyDown.current === "ArrowUp" || keyDown.current === "ArrowDown") {
+      selectInput();
+    }
+  }, [selectInput]);
 
   const handleInputFocus = useCallback(() => {
     selectInput();
@@ -133,6 +140,7 @@ const NumberInputField = React.memo(({ value, onChange, ...props }: Props) => {
       value={inputValue.toString()}
       onChange={handleInputChange}
       onKeyDown={handleInputKeyDown}
+      onKeyUp={handleInputKeyUp}
       onFocus={handleInputFocus}
       onBlur={handleInputBlur}
     />
