@@ -3,6 +3,7 @@ import { Timeline } from "../Timeline";
 import userEvent from "@testing-library/user-event";
 
 describe("Timeline", () => {
+  const user = userEvent.setup();
   it("Work as expected", async () => {
     render(<Timeline />);
 
@@ -22,22 +23,22 @@ describe("Timeline", () => {
     expect(durationInput.value).toBe("2000");
 
     currentTimeInput.focus();
-    await userEvent.type(currentTimeInput, "100");
-    await userEvent.keyboard("{enter}");
+    await user.type(currentTimeInput, "100");
+    await user.keyboard("{enter}");
     expect(currentTimeInput).not.toHaveFocus();
     expect(currentTimeInput.value).toBe("100");
     expect(playhead.style.transform).toBe("translateX(calc(100px - 50%))");
 
     currentTimeInput.focus();
-    await userEvent.type(currentTimeInput, "200");
-    await userEvent.click(durationInput);
+    await user.type(currentTimeInput, "200");
+    await user.click(document.body);
     expect(currentTimeInput.value).toBe("200");
 
-    await userEvent.type(durationInput, "1000");
+    await user.type(durationInput, "1000");
     expect(getComputedStyle(rulerBar).width).toBe("1000px");
 
-    await userEvent.type(durationInput, "50");
-    await userEvent.keyboard("{enter}");
+    await user.type(durationInput, "50");
+    await user.keyboard("{enter}");
     expect(durationInput.value).toBe("100");
     expect(currentTimeInput.value).toBe("100");
 
