@@ -10,6 +10,7 @@ export const Timeline = () => {
   // FIXME: performance concerned
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(DEFAULT_DURATION);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   return (
     <div
@@ -31,8 +32,8 @@ export const Timeline = () => {
       />
       <TrackList />
       <KeyframeList duration={duration} />
-      <Playhead time={time} />
-      <SyncScroll />
+      <Playhead time={time} scrollLeft={scrollLeft} />
+      <SyncScroll setScrollLeft={setScrollLeft} />
     </div>
   );
 };

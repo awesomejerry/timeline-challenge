@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
 
-const SyncScroll = () => {
+type SyncScrollProps = {
+  setScrollLeft?: (value: number) => void;
+};
+
+const SyncScroll = ({ setScrollLeft }: SyncScrollProps) => {
   const elementRefs = useRef<Element[]>([]);
 
   const handleScroll = useCallback((e: Event) => {
@@ -34,6 +38,7 @@ const SyncScroll = () => {
         }
       }
     });
+    setScrollLeft?.(scrollLeft);
   }, []);
 
   useEffect(() => {
