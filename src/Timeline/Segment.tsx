@@ -4,6 +4,7 @@ type SegmentProps = {
 
 export const Segment = ({ duration }: SegmentProps) => {
   // TODO: resize based on time
+  // NOTE: changed based on props
 
   return (
     <div
