@@ -6,6 +6,7 @@ type KeyframeListProps = {
 
 export const KeyframeList = ({ duration }: KeyframeListProps) => {
   // TODO: implement scroll sync with `Ruler` and `TrackList`
+  // NOTE: use SyncScroll
 
   return (
     <div

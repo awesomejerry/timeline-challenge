@@ -1,5 +1,6 @@
 export const TrackList = () => {
   // TODO: implement scroll sync with `KeyframeList`
+  // NOTE: use SyncScroll
 
   return (
     <div

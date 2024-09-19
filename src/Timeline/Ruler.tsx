@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { tenMultipliers } from "../utils";
 
 type RulerProps = {
@@ -7,7 +7,7 @@ type RulerProps = {
   duration: number;
   setDuration: (time: number) => void;
 };
-export const Ruler = ({ setTime, duration }: RulerProps) => {
+export const Ruler = React.memo(({ setTime, duration }: RulerProps) => {
   const draggingRef = useRef(false);
 
   useEffect(() => {
@@ -64,4 +64,4 @@ export const Ruler = ({ setTime, duration }: RulerProps) => {
       ></div>
     </div>
   );
-};
+});

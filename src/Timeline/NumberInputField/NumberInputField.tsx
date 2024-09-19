@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { tenMultipliers } from "../../utils";
 
 type Props = Omit<
@@ -10,9 +10,10 @@ type Props = Omit<
   min: number;
   max: number;
   step: number;
+  "data-testid": string;
 };
 
-const NumberInputField = ({ value, onChange, ...props }: Props) => {
+const NumberInputField = React.memo(({ value, onChange, ...props }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { step, min, max } = props;
   const [inputValue, setInputValue] = useState(value);
@@ -136,6 +137,6 @@ const NumberInputField = ({ value, onChange, ...props }: Props) => {
       onBlur={handleInputBlur}
     />
   );
-};
+});
 
 export { NumberInputField };

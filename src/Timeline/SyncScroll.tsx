@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 type SyncScrollProps = {
   setScrollLeft?: (value: number) => void;
@@ -12,7 +12,7 @@ const checkSyncDirection = ({
   direction: "horizontal" | "vertical";
 }) => target.getAttribute("data-sync-scroll")?.indexOf(direction) !== -1;
 
-const SyncScroll = ({ setScrollLeft }: SyncScrollProps) => {
+const SyncScroll = React.memo(({ setScrollLeft }: SyncScrollProps) => {
   const elementRefs = useRef<Element[]>([]);
 
   const handleScroll = useCallback((e: Event) => {
@@ -72,6 +72,6 @@ const SyncScroll = ({ setScrollLeft }: SyncScrollProps) => {
   }, []);
 
   return <></>;
-};
+});
 
 export { SyncScroll };
