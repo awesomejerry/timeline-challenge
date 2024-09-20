@@ -4,7 +4,8 @@ type PlayheadProps = {
 };
 
 export const Playhead = ({ time, scrollLeft = 0 }: PlayheadProps) => {
-  const outOfView = time < scrollLeft;
+  // NOTE: 15px is the left padding of the ruler (1rem ~= 16px) - 1px
+  const outOfView = time < scrollLeft - 15;
   return (
     <div
       className="absolute left-[316px] h-full border-l-2 border-solid border-yellow-600 z-10"
