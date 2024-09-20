@@ -98,13 +98,13 @@ const NumberInputField = React.memo(({ value, onChange, ...props }: Props) => {
       switch (e.key) {
         case "Enter":
           e.preventDefault();
-          submitChange(inputValue);
           clearFocus();
+          submitChange(inputValue);
           break;
         case "Escape":
           e.preventDefault();
-          submitChange(value);
           clearFocus();
+          submitChange(value);
           break;
         case "ArrowUp":
         case "ArrowDown":
@@ -116,7 +116,7 @@ const NumberInputField = React.memo(({ value, onChange, ...props }: Props) => {
       }
       keyDown.current = e.key;
     },
-    [submitChange, inputValue, step, clearFocus]
+    [submitChange, inputValue, step, clearFocus, value]
   );
   const handleInputKeyUp = useCallback(() => {
     if (keyDown.current === "ArrowUp" || keyDown.current === "ArrowDown") {

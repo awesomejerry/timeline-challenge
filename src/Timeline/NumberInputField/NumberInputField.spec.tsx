@@ -235,7 +235,7 @@ describe("NumberInputField", () => {
     expect(input).not.toHaveFocus();
   });
 
-  it(" Pressing Escape reverts to the original value and removes focus", async () => {
+  it("Pressing Escape reverts to the original value and removes focus", async () => {
     const mockOnChange = jest.fn();
     const initialValue = 150;
 
